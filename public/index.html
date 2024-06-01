@@ -1,1 +1,441 @@
-Hello Tomica World.
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>AES-256 アンジッパー</title>
+	<!-- Bootstrap CSS -->
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+	<style>
+		body {
+			background-color: #f8f9fa;
+		}
+
+		#loading {
+			position: fixed;
+			width: 100%;
+			height: 100%;
+			top: 0;
+			left: 0;
+			background: rgba(255, 255, 255, 0.8);
+			z-index: 9999;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 1.5rem;
+			color: #000;
+		}
+
+		.upload-container {
+			margin-top: 50px;
+		}
+
+		.file-input-label {
+			border: 2px dashed #6c757d;
+			border-radius: 10px;
+			padding: 20px;
+			text-align: center;
+			cursor: pointer;
+			transition: background-color 0.3s ease;
+		}
+
+		.file-input-label:hover {
+			background-color: #e9ecef;
+		}
+
+		.file-input {
+			display: none;
+		}
+
+		.file-name {
+			margin-top: 10px;
+			font-weight: bold;
+			text-align: center;
+		}
+
+		.info-text {
+			margin-top: 10px;
+			margin-left: 5px;
+			text-align: left;
+			color: #6c757d;
+		}
+
+		.file-item {
+			cursor: pointer;
+			margin-left: 20px;
+			display: flex;
+			align-items: center;
+			margin-bottom: 5px;
+		}
+
+		.file-item i {
+			margin-right: 10px;
+		}
+
+		.file-item a {
+			text-decoration: underline;
+			color: #007bff;
+		}
+
+		.file-item a:hover {
+			color: #0056b3;
+		}
+
+		.loading-spinner {
+			display: none;
+			text-align: center;
+		}
+
+		.folder-container {
+			display: flex;
+			align-items: center;
+			margin-top: 20px;
+		}
+
+		.folder-icon {
+			font-size: 2em;
+		}
+
+		.folder-name {
+			margin-left: 10px;
+			font-weight: bold;
+		}
+
+		.file-list {
+			margin-left: 20px;
+			margin-top: 10px;
+		}
+
+		.tree-item {
+			margin-left: 20px;
+		}
+
+		.tree-icon {
+			margin-right: 5px;
+		}
+	</style>
+</head>
+
+<body onload="initialize()">
+	<div class="container mt-5">
+		<div class="card">
+			<div class="card-header bg-primary text-white">
+				<h1>AES-256 アンジッパー</h1>
+			</div>
+			<div class="card-body">
+				<h2 class="card-title">AES-256 アンジッパー について</h2>
+				<p class="card-text">AES-256 アンジッパーは、ブラウザ上でZIP圧縮ファイルを解凍するサービスです。</p>
+				<p class="card-text">下記の特徴を備えています。</p>
+				<ul>
+					<li>ネットワーク上にZIPファイルをアップロードする必要がなく、全てローカル上で完結するため、セキュリティ的にも安全です。</li>
+					<li>アップロードがないため、高速な展開処理を可能としています。</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div id="loading">ローディング中...</div>
+	<div id="content" class="container upload-container" style="display:none;">
+		<div class="row justify-content-center">
+			<div class="col-md-8">
+				<div class="card">
+					<div class="card-header bg-primary text-white">
+						<h4 class="mb-0"><i class="fas fa-snowflake"></i> ZIP圧縮ファイルを解凍する</h4>
+					</div>
+					<div class="card-body">
+						<form id="upload-form">
+							<div class="form-group">
+								<label for="file-upload" class="file-input-label">
+									<i class="fas fa-cloud-upload-alt fa-3x"></i><br>
+									ファイルをドラッグ&ドロップするか、クリックしてアップロード
+								</label>
+								<input type="file" id="file-upload" class="file-input" accept=".zip">
+								<div id="file-name" class="file-name"></div>
+							</div>
+						</form>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<!-- Password Modal -->
+	<div class="modal fade" id="passwordModal" tabindex="-1" role="dialog" aria-labelledby="passwordModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="passwordModalLabel">パスワードを入力</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form id="password-form">
+						<div class="form-group">
+							<label for="password-input">パスワード</label>
+							<div class="input-group">
+								<input type="password" class="form-control" id="password-input">
+								<div class="input-group-append">
+									<button class="btn btn-outline-secondary" type="button" id="toggle-password">
+										<i class="fas fa-eye"></i>
+									</button>
+								</div>
+							</div>
+						</div>
+						<button type="button" class="btn btn-primary" id="confirm-password"> OK </button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- File List Modal -->
+	<div class="modal fade" id="fileListModal" tabindex="-1" role="dialog" aria-labelledby="fileListModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="fileListModalLabel">解凍したファイル</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="loading-spinner" id="loading-spinner">
+						<div class="spinner-border text-primary" role="status">
+							<span class="sr-only">Loading...</span>
+						</div>
+					</div>
+					<div id="file-list" style="display: none;">
+						<div class="folder-container">
+							<div class="folder-icon">
+								<i class="fas fa-folder"></i>
+							</div>
+							<div class="folder-name" id="zip-folder-name"></div>
+						</div>
+						<div class="file-list" id="file-items">
+							<!-- ファイル一覧がここに表示されます -->
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<input type="hidden" value="" id="virtual-file-path">
+	<input type="hidden" value="" id="work-dir">
+
+	<!-- Bootstrap JS and dependencies -->
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<!-- Font Awesome -->
+	<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+	<script src="https://cjrtnc.leaningtech.com/3.0/cj3loader.js"></script>
+	<!-- Custom JS -->
+	<script>
+		var unzipper;
+		function initialize() {
+			(async function () {
+				await cheerpjInit();
+				const cj = await cheerpjRunLibrary("/app/aes-256-unzipper-executable.jar");
+				const Unzipper = await cj.net.woof_dev.aes256_unzip.Unzipper;
+				unzipper = await new Unzipper();
+				document.getElementById('loading').style.display = 'none';
+				document.getElementById('content').style.display = 'block';
+			})();
+		}
+
+		document.getElementById('file-upload').addEventListener('change', handleFileSelect, false);
+		document.getElementById('file-upload').addEventListener('change', function () {
+			var fileNames = Array.from(this.files).map(file => file.name).join(', ');
+			document.getElementById('file-name').textContent = '選択されたファイル: ' + fileNames;
+			document.getElementById('zip-folder-name').textContent = fileNames;
+		});
+
+		document.getElementById('toggle-password').addEventListener('click', function () {
+			var passwordInput = document.getElementById('password-input');
+			var passwordIcon = this.querySelector('i');
+			if (passwordInput.type === 'password') {
+				passwordInput.type = 'text';
+				passwordIcon.classList.remove('fa-eye');
+				passwordIcon.classList.add('fa-eye-slash');
+			} else {
+				passwordInput.type = 'password';
+				passwordIcon.classList.remove('fa-eye-slash');
+				passwordIcon.classList.add('fa-eye');
+			}
+		});
+
+		document.getElementById('password-input').addEventListener('keypress', function (event) {
+			if (event.key === 'Enter') {
+				event.preventDefault();
+				document.getElementById('confirm-password').click();
+			}
+		});
+
+		document.getElementById('confirm-password').addEventListener('click', function () {
+			var password = document.getElementById('password-input').value;
+			if (password) {
+				$('#passwordModal').modal('hide');
+				showLoadingSpinner();
+				extractZipFile(password);
+			} else {
+				alert('パスワードを入力してください');
+			}
+		});
+
+		function showLoadingSpinner() {
+			document.getElementById('loading-spinner').style.display = 'block';
+			document.getElementById('file-list').style.display = 'none';
+		}
+
+		function hideLoadingSpinner() {
+			document.getElementById('loading-spinner').style.display = 'none';
+			document.getElementById('file-list').style.display = 'block';
+		}
+
+		function showPasswordDialog() {
+			const form = document.getElementById("password-form");
+			form.reset();
+			$('#passwordModal').modal('show');
+		}
+		
+		function resetForm() {
+			const form = document.getElementById("upload-form");
+			form.reset();
+			document.getElementById('file-name').textContent = 'やり直す場合は、ファイルを再選択';
+		}
+
+		function displayFileList(fileArray) {
+			hideLoadingSpinner();
+			var fileItems = document.getElementById('file-items');
+			var cnt = 0;
+			fileItems.innerHTML = '';
+			fileArray.forEach(file => {
+				var linkId = 'download-link-' + cnt++;
+				var listItem = document.createElement('div');
+				listItem.className = 'file-item';
+				listItem.dataset.filename = file;
+				listItem.dataset.linkId = linkId;
+				listItem.innerHTML = `<i class="fas fa-angle-right tree-icon"></i><i class="fas fa-file"></i><a href="#">${file}</a>`;
+				listItem.addEventListener('click', function (e) {
+					const workDir = document.getElementById('work-dir').value;
+					const filename = this.dataset.filename;
+					const linkId = this.dataset.linkId;
+					console.log('# file=' + filename + ', id=' + linkId);
+					downloadFile(workDir, filename, linkId);
+				});
+				fileItems.appendChild(listItem);
+			});
+		}
+
+		function handleFileSelect(event) {
+			var file = event.target.files[0];
+			var reader = new FileReader();
+			reader.onload = function (e) {
+				var arrayBuffer = e.target.result;
+				var byteArray = new Uint8Array(arrayBuffer);
+				// Javaのメソッドを呼び出すためにバイナリデータをBase64にエンコード
+				var base64String = byteArrayToBase64(byteArray);
+				checkFile(base64String);
+			};
+			reader.readAsArrayBuffer(file);
+		}
+
+		async function extractZipFile(password) {
+			const filePath = document.getElementById('virtual-file-path').value
+			const jsonString = await unzipper.extractZipFile(filePath, password);
+			let value = JSON.parse(jsonString);
+			if (value.errorMsg != null) {
+				alert(value.errorMsg);
+				resetForm();
+				return;
+			}
+			document.getElementById('work-dir').value = value.workDir;
+			$('#fileListModal').modal('show');
+			displayFileList(value.fileArray);
+		}
+
+		async function checkFile(base64String) {
+			const jsonString = await unzipper.checkZipFile(base64String);
+			let value = JSON.parse(jsonString);
+			if (value.errorMsg != null) {
+				alert(value.errorMsg);
+				resetForm();
+				return;
+			}
+			document.getElementById('virtual-file-path').value = value.virtualFilePath;
+			if (value.isEncrypted) {
+				showPasswordDialog();				
+			} else {
+				$('#fileListModal').modal('show');
+				showLoadingSpinner();
+				extractZipFile(null);
+			}
+		}
+
+		async function downloadFile(workDir, fileName, linkId) {
+			const jsonString = await unzipper.getFileData(workDir, fileName);
+			let value = JSON.parse(jsonString);
+			if (value) {
+				console.log(value);
+				var byteArray = base64ToUint8Array(value.base64data);
+
+				// ファイルとしてåダウンロード
+				var blob = new Blob([byteArray], {type: value.mimeType});
+				console.log(value.mimeType + ' : ' + value.filename);
+				var url = URL.createObjectURL(blob);
+
+				var a = document.createElement('a');
+				a.id = linkId;
+				//				var a = document.getElementById('downloader');
+				a.href = url;
+				a.download = value.filename;
+				document.body.appendChild(a);
+				clickUrl(linkId, url);
+			} else {
+				console.error('Failed to retrieve the file content.');
+				resetForm();
+			}
+		}
+
+		function clickUrl(linkId, url) {
+			const a = document.getElementById(linkId);
+			a.click();
+			setTimeout(function () {
+				document.body.removeChild(a);
+				window.URL.revokeObjectURL(url);
+			}, 0);
+		}
+
+		function byteArrayToBase64(byteArray) {
+			var binary = '';
+			var len = byteArray.byteLength;
+			for (var i = 0; i < len; i++) {
+				binary += String.fromCharCode(byteArray[i]);
+			}
+			return btoa(binary);
+		}
+
+		function base64ToUint8Array(base64) {
+			//console.log(base64);
+			var raw = window.atob(base64);
+			var rawLength = raw.length;
+			var array = new Uint8Array(new ArrayBuffer(rawLength));
+
+			for (let i = 0; i < rawLength; i++) {
+				array[i] = raw.charCodeAt(i);
+			}
+			return array;
+		}		
+	</script>
+</body>
+
+</html>

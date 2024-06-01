@@ -1,0 +1,103 @@
+<project xmlns="https://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="https://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<packaging>jar</packaging>
+	<version>1.0.0</version>
+
+	<groupId>net.woof-dev</groupId>
+	<artifactId>aes256-unzip</artifactId>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>8</source>
+					<target>8</target>
+					<encoding>UTF-8</encoding>
+					<compilerArgument>-proc:none</compilerArgument>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>net.woof_dev.aes256_unzip.Main</mainClass>
+							<addClasspath>true</addClasspath>
+							<addExtensions>false</addExtensions>
+						</manifest>
+						<manifestEntries>
+							<Class-Path>.</Class-Path>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>3.6.0</version>
+
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>net.woof_dev.aes256_unzip.Main</mainClass>
+						</manifest>
+					</archive>
+					<descriptors>
+						<descriptor>src/main/assembly/executable-jar.xml</descriptor>
+					</descriptors>
+					<outputDirectory>${build.output.dir}</outputDirectory>
+					<finalName>aes-256-unzipper</finalName>
+				</configuration>
+				<executions>
+					<execution>
+						<id>ex</id>
+						<phase>compile</phase><!-- packageじゃなくて、compileを指定 -->
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>net.lingala.zip4j</groupId>
+			<artifactId>zip4j</artifactId>
+			<version>2.9.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tika</groupId>
+			<artifactId>tika-core</artifactId>
+			<version>2.4.1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-nop -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-nop</artifactId>
+			<version>1.7.36</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.13.3</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/junit/junit -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.13</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+</project>

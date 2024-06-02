@@ -8,6 +8,24 @@
 	<!-- Bootstrap CSS -->
 	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 	<style>
+		:root {
+		    --primary: rgb(86, 86, 86); /* 独自のプライマリカラーに変更 */
+		}
+		.btn-primary {
+		    background-color: var(--primary);
+		    border-color: var(--primary);
+		}
+		.btn-primary:hover {
+		    background-color: rgb(90, 90, 90); /* 独自のプライマリカラーのホバー時の色 */
+		    border-color:rgb(90, 90, 90);
+		}
+		.bg-primary {
+		    background-color: var(--primary) !important;
+		}
+		.text-primary {
+		    color: var(--primary) !important;
+		}
+		
 		body {
 			background-color: #f8f9fa;
 		}
@@ -35,6 +53,7 @@
 			border: 2px dashed #6c757d;
 			border-radius: 10px;
 			padding: 20px;
+			width: 100%;
 			text-align: center;
 			cursor: pointer;
 			transition: background-color 0.3s ease;
@@ -135,7 +154,7 @@
 		</div>
 	</div>
 
-	<div id="loading">ローディング中...</div>
+	<div id="loading"><i class="fas fa-spinner fa-pulse fa-lg" style="color: #74C0FC;"></i>　ローディング中...</div>
 	<div id="content" class="container upload-container" style="display:none;">
 		<div class="row justify-content-center">
 			<div class="col-md-8">
@@ -148,7 +167,7 @@
 							<div class="form-group">
 								<label for="file-upload" class="file-input-label">
 									<i class="fas fa-cloud-upload-alt fa-3x"></i><br>
-									ファイルをドラッグ&ドロップするか、クリックしてアップロード
+									クリックしてファイルを選択
 								</label>
 								<input type="file" id="file-upload" class="file-input" accept=".zip">
 								<div id="file-name" class="file-name"></div>

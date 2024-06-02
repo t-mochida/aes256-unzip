@@ -5,39 +5,81 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>AES256 ZIP解凍ツール - 安全で簡単なZIPファイルの解凍 | AES256-UNZIP</title>
-	<meta name="description" content="AES256暗号化されたZIPファイルを安全に解凍する無料ツール。現在、Windowsのデフォルト解凍機能はAES256暗号化に対応していません。シンプルで使いやすいインターフェースで、ZIP圧縮ファイルの解凍をブラウザでスムーズに行えます。今すぐ試してみてください。">
+	<meta name="description"
+		content="AES256暗号化されたZIPファイルを安全に解凍する無料ツール。現在、Windowsのデフォルト解凍機能はAES256暗号化に対応していません。シンプルで使いやすいインターフェースで、ZIP圧縮ファイルの解凍をブラウザでスムーズに行えます。今すぐ試してみてください。">
+
+	<!-- OGP tag -->
+	<meta property="og:title" content="AES256 ZIP解凍ツール - 安全で簡単なZIPファイルの解凍" />
+	<meta property="og:description"
+		content="AES256暗号化されたZIPファイルを安全に解凍する無料ツール。現在、Windowsのデフォルト解凍機能はAES256暗号化に対応していません。シンプルで使いやすいインターフェースで、ZIP圧縮ファイルの解凍をブラウザでスムーズに行えます。今すぐ試してみてください。" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://aes256-unzip.woof-dev.net/" />
+	<meta property="og:image" content="https://aes256-unzip.woof-dev.net/logo.png" />
+	<meta property="og:site_name" content="AES256-UNZIP" />
+	<meta property="og:locale" content="ja_JP" />
+
+	<!-- JSON-LD -->
+	<script type="application/ld+json">
+	{
+	    "@context": "https://schema.org",
+	    "@type": "SoftwareApplication",
+	    "name": "AES256-UNZIP",
+	    "url": "https://aes256-unzip.woof-dev.net/",
+	    "image": "https://aes256-unzip.woof-dev.net/logo.png",
+	    "description": "AES256暗号化されたZIPファイルを安全に解凍する無料ツール。現在、Windowsのデフォルト解凍機能はAES256暗号化に対応していません。シンプルで使いやすいインターフェースで、ZIP圧縮ファイルの解凍をブラウザでスムーズに行えます。今すぐ試してみてください。",
+	    "applicationCategory": "UtilitiesApplication",
+	    "operatingSystem": "Cross-platform",
+	    "softwareVersion": "1.0.0",
+	    "datePublished": "2024-06-02",
+	    "publisher": {
+	      "@type": "Organization",
+	      "name": "Woof"
+	    },
+	    "offers": {
+	      "@type": "Offer",
+	      "price": "0",
+	      "priceCurrency": "JPY"
+	    }
+	}
+	</script>
 
 	<!-- Google tag (gtag.js) -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=G-03BYG77DER"></script>
 	<script>
-	  window.dataLayer = window.dataLayer || [];
-	  function gtag(){dataLayer.push(arguments);}
-	  gtag('js', new Date());
-	
-	  gtag('config', 'G-03BYG77DER');
+		window.dataLayer = window.dataLayer || [];
+		function gtag() {dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'G-03BYG77DER');
 	</script>
 
 	<!-- Bootstrap CSS -->
 	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 	<style>
 		:root {
-		    --primary: rgb(86, 86, 86); /* 独自のプライマリカラーに変更 */
+			--primary: rgb(86, 86, 86);
+			/* 独自のプライマリカラーに変更 */
 		}
+
 		.btn-primary {
-		    background-color: var(--primary);
-		    border-color: var(--primary);
+			background-color: var(--primary);
+			border-color: var(--primary);
 		}
+
 		.btn-primary:hover {
-		    background-color: rgb(90, 90, 90); /* 独自のプライマリカラーのホバー時の色 */
-		    border-color:rgb(90, 90, 90);
+			background-color: rgb(90, 90, 90);
+			/* 独自のプライマリカラーのホバー時の色 */
+			border-color: rgb(90, 90, 90);
 		}
+
 		.bg-primary {
-		    background-color: var(--primary) !important;
+			background-color: var(--primary) !important;
 		}
+
 		.text-primary {
-		    color: var(--primary) !important;
+			color: var(--primary) !important;
 		}
-		
+
 		body {
 			background-color: #f8f9fa;
 		}
@@ -337,7 +379,7 @@
 			form.reset();
 			$('#passwordModal').modal('show');
 		}
-		
+
 		function resetForm() {
 			const form = document.getElementById("upload-form");
 			form.reset();
@@ -404,7 +446,7 @@
 			}
 			document.getElementById('virtual-file-path').value = value.virtualFilePath;
 			if (value.isEncrypted) {
-				showPasswordDialog();				
+				showPasswordDialog();
 			} else {
 				$('#fileListModal').modal('show');
 				showLoadingSpinner();

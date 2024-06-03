@@ -53,6 +53,8 @@
 		gtag('config', 'G-03BYG77DER');
 	</script>
 
+	<!-- FontAwesome 4.7 CDN -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 	<!-- Bootstrap CSS -->
 	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 	<style>
@@ -208,19 +210,19 @@
 		</div>
 	</div>
 
-	<div id="loading"><i class="fas fa-spinner fa-pulse fa-lg" style="color: #74C0FC;"></i>　ローディング中...</div>
+	<div id="loading"><i class="fa fa-spinner fa-pulse fa-lg" style="color: #74C0FC;" aria-hidden="true"></i>　ローディング中...</div>
 	<div id="content" class="container upload-container" style="display:none;">
 		<div class="row justify-content-center">
 			<div class="col-md-8">
 				<div class="card">
 					<div class="card-header bg-primary text-white">
-						<h4 class="mb-0"><i class="fas fa-snowflake"></i> ZIP圧縮ファイルを解凍する</h4>
+						<h4 class="mb-0"><i class="fa fa-snowflake-o" aria-hidden="true"></i> ZIP圧縮ファイルを解凍する</h4>
 					</div>
 					<div class="card-body">
 						<form id="upload-form">
 							<div class="form-group">
 								<label for="file-upload" class="file-input-label">
-									<i class="fas fa-cloud-upload-alt fa-3x"></i><br>
+									<i class="fa fa-cloud-upload fa-3x" aria-hidden="true"></i><br>
 									クリックしてファイルを選択
 								</label>
 								<input type="file" id="file-upload" class="file-input" accept=".zip">
@@ -253,7 +255,7 @@
 								<input type="password" class="form-control" id="password-input">
 								<div class="input-group-append">
 									<button class="btn btn-outline-secondary" type="button" id="toggle-password">
-										<i class="fas fa-eye"></i>
+										<i class="fa fa-eye" aria-hidden="true"></i>
 									</button>
 								</div>
 							</div>
@@ -308,8 +310,7 @@
 	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-	<!-- Font Awesome -->
-	<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+	<!-- CheerpJ -->		
 	<script src="https://cjrtnc.leaningtech.com/3.0/cj3loader.js"></script>
 	<!-- Custom JS -->
 	<script>

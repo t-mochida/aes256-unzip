@@ -23,3 +23,4 @@ hs_err_pid*
 replay_pid*
 
 assets/html/aes-256-unzipper-executable.jar
+public/.node-version
